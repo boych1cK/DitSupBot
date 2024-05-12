@@ -1,0 +1,56 @@
+2024-05-12 16:32:54,472 INFO d.g.D.DitSupBotApplication [main] Starting DitSupBotApplication using Java 22.0.1 with PID 15364 (G:\DITBot\DitSupportBot-main\DitSupportBot-main\DitSupBot\target\classes started by bebra in G:\DITBot\DitSupportBot-main\DitSupportBot-main\DitSupBot)
+2024-05-12 16:32:54,472 DEBUG d.g.D.DitSupBotApplication [main] Running with Spring Boot v3.2.5, Spring v6.1.6
+2024-05-12 16:32:54,473 INFO d.g.D.DitSupBotApplication [main] No active profile set, falling back to 1 default profile: "default"
+2024-05-12 16:32:55,772 INFO d.g.D.DitSupBotApplication [main] Started DitSupBotApplication in 1.542 seconds (process running for 1.921)
+2024-05-12 16:32:56,926 INFO d.g.D.S.TGBot [Dit_support_bot Telegram Executor] Message sent to 958756431
+2024-05-12 16:32:58,951 INFO d.g.D.S.TGBot [Dit_support_bot Telegram Executor] Message sent to 958756431
+2024-05-12 16:33:04,220 INFO d.g.D.S.TGBot [Dit_support_bot Telegram Executor] Message sent to 958756431
+2024-05-12 16:33:05,339 INFO d.g.D.S.TGBot [Dit_support_bot Telegram Executor] Message sent to 958756431
+2024-05-12 16:33:08,790 INFO d.g.D.S.TGBot [Dit_support_bot Telegram Executor] Message sent to 958756431
+2024-05-12 16:33:16,936 INFO d.g.D.S.TGBot [Dit_support_bot Telegram Executor] Message sent to 958756431
+2024-05-12 16:33:18,013 INFO d.g.D.S.TGBot [Dit_support_bot Telegram Executor] Message sent to 958756431
+2024-05-12 16:33:19,291 INFO d.g.D.S.TGBot [Dit_support_bot Telegram Executor] Message sent to 958756431
+2024-05-12 16:33:23,228 INFO d.g.D.S.TGBot [Dit_support_bot Telegram Executor] Message sent to 958756431
+2024-05-12 16:35:50,322 INFO d.g.D.DitSupBotApplication [main] Starting DitSupBotApplication using Java 22.0.1 with PID 21036 (G:\DITBot\DitSupportBot-main\DitSupportBot-main\DitSupBot\target\classes started by bebra in G:\DITBot\DitSupportBot-main\DitSupportBot-main\DitSupBot)
+2024-05-12 16:35:50,323 DEBUG d.g.D.DitSupBotApplication [main] Running with Spring Boot v3.2.5, Spring v6.1.6
+2024-05-12 16:35:50,324 INFO d.g.D.DitSupBotApplication [main] No active profile set, falling back to 1 default profile: "default"
+2024-05-12 16:35:51,534 INFO d.g.D.DitSupBotApplication [main] Started DitSupBotApplication in 1.462 seconds (process running for 1.845)
+2024-05-12 16:35:52,121 INFO d.g.D.S.TGBot [Dit_support_bot Telegram Executor] Message sent to 958756431
+2024-05-12 16:35:57,399 INFO d.g.D.S.TGBot [Dit_support_bot Telegram Executor] Message sent to 958756431
+2024-05-12 16:35:59,517 INFO d.g.D.S.TGBot [Dit_support_bot Telegram Executor] Message sent to 958756431
+2024-05-12 16:36:02,769 INFO d.g.D.E.EmailSender [Dit_support_bot Telegram Executor] Email sent to adresspetrgfjsv@gmail.com
+2024-05-12 16:36:02,899 INFO d.g.D.S.TGBot [Dit_support_bot Telegram Executor] Message sent to 958756431
+2024-05-12 16:36:22,845 INFO d.g.D.DitSupBotApplication [main] Starting DitSupBotApplication using Java 22.0.1 with PID 3424 (G:\DITBot\DitSupportBot-main\DitSupportBot-main\DitSupBot\target\classes started by bebra in G:\DITBot\DitSupportBot-main\DitSupportBot-main\DitSupBot)
+2024-05-12 16:36:22,845 DEBUG d.g.D.DitSupBotApplication [main] Running with Spring Boot v3.2.5, Spring v6.1.6
+2024-05-12 16:36:22,846 INFO d.g.D.DitSupBotApplication [main] No active profile set, falling back to 1 default profile: "default"
+2024-05-12 16:36:24,217 INFO d.g.D.DitSupBotApplication [main] Started DitSupBotApplication in 1.618 seconds (process running for 1.998)
+2024-05-12 16:36:25,452 INFO d.g.D.S.TGBot [Dit_support_bot Telegram Executor] Message sent to 958756431
+2024-05-12 16:36:33,876 INFO d.g.D.S.TGBot [Dit_support_bot Telegram Executor] Message sent to 958756431
+2024-05-12 16:36:40,035 INFO d.g.D.S.TGBot [Dit_support_bot Telegram Executor] Message sent to 958756431
+2024-05-12 16:37:51,723 INFO d.g.D.DitSupBotApplication [main] Starting DitSupBotApplication using Java 22.0.1 with PID 20708 (G:\DITBot\DitSupportBot-main\DitSupportBot-main\DitSupBot\target\classes started by bebra in G:\DITBot\DitSupportBot-main\DitSupportBot-main\DitSupBot)
+2024-05-12 16:37:51,724 DEBUG d.g.D.DitSupBotApplication [main] Running with Spring Boot v3.2.5, Spring v6.1.6
+2024-05-12 16:37:51,725 INFO d.g.D.DitSupBotApplication [main] No active profile set, falling back to 1 default profile: "default"
+2024-05-12 16:37:53,324 INFO d.g.D.DitSupBotApplication [main] Started DitSupBotApplication in 1.952 seconds (process running for 2.467)
+2024-05-12 16:37:55,091 INFO d.g.D.S.TGBot [Dit_support_bot Telegram Executor] Message sent to 958756431
+2024-05-12 16:38:01,289 INFO d.g.D.S.TGBot [Dit_support_bot Telegram Executor] Message sent to 958756431
+2024-05-12 16:38:07,488 INFO d.g.D.S.TGBot [Dit_support_bot Telegram Executor] Message sent to 958756431
+2024-05-12 16:38:45,344 INFO d.g.D.S.TGBot [Dit_support_bot Telegram Executor] Message sent to 958756431
+2024-05-12 16:39:20,817 INFO d.g.D.S.TGBot [Dit_support_bot Telegram Executor] Message sent to 958756431
+2024-05-12 16:39:23,799 INFO d.g.D.S.TGBot [Dit_support_bot Telegram Executor] Message sent to 958756431
+2024-05-12 16:39:43,459 INFO d.g.D.DitSupBotApplication [main] Starting DitSupBotApplication using Java 22.0.1 with PID 14764 (G:\DITBot\DitSupportBot-main\DitSupportBot-main\DitSupBot\target\classes started by bebra in G:\DITBot\DitSupportBot-main\DitSupportBot-main\DitSupBot)
+2024-05-12 16:39:43,459 DEBUG d.g.D.DitSupBotApplication [main] Running with Spring Boot v3.2.5, Spring v6.1.6
+2024-05-12 16:39:43,459 INFO d.g.D.DitSupBotApplication [main] No active profile set, falling back to 1 default profile: "default"
+2024-05-12 16:39:44,646 INFO d.g.D.DitSupBotApplication [main] Started DitSupBotApplication in 1.431 seconds (process running for 1.82)
+2024-05-12 16:39:45,185 INFO d.g.D.S.TGBot [Dit_support_bot Telegram Executor] Message sent to 958756431
+2024-05-12 16:39:49,752 INFO d.g.D.S.TGBot [Dit_support_bot Telegram Executor] Message sent to 958756431
+2024-05-12 16:39:50,747 INFO d.g.D.S.TGBot [Dit_support_bot Telegram Executor] Message sent to 958756431
+2024-05-12 16:39:54,691 INFO d.g.D.E.EmailSender [Dit_support_bot Telegram Executor] Email sent to adress petrgfjsv@gmail.com
+2024-05-12 16:39:54,827 INFO d.g.D.S.TGBot [Dit_support_bot Telegram Executor] Message sent to 958756431
+2024-05-12 16:40:13,506 INFO d.g.D.S.TGBot [Dit_support_bot Telegram Executor] Message sent to 958756431
+2024-05-12 16:41:16,928 INFO d.g.D.DitSupBotApplication [main] Starting DitSupBotApplication using Java 22.0.1 with PID 5448 (G:\DITBot\DitSupportBot-main\DitSupportBot-main\DitSupBot\target\classes started by bebra in G:\DITBot\DitSupportBot-main\DitSupportBot-main\DitSupBot)
+2024-05-12 16:41:16,928 DEBUG d.g.D.DitSupBotApplication [main] Running with Spring Boot v3.2.5, Spring v6.1.6
+2024-05-12 16:41:16,929 INFO d.g.D.DitSupBotApplication [main] No active profile set, falling back to 1 default profile: "default"
+2024-05-12 16:41:17,963 INFO d.g.D.S.TGBot [main] BotCommandsHasBeenSet
+2024-05-12 16:41:18,156 INFO d.g.D.DitSupBotApplication [main] Started DitSupBotApplication in 1.477 seconds (process running for 1.869)
+2024-05-12 16:41:43,072 INFO d.g.D.S.TGBot [Dit_support_bot Telegram Executor] Message sent to 958756431
+2024-05-12 16:41:43,072 INFO d.g.D.S.TGBot [Dit_support_bot Telegram Executor] Message sent to 958756431
