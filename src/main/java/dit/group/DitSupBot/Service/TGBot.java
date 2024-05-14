@@ -1,6 +1,7 @@
 package dit.group.DitSupBot.Service;
 
 import dit.group.DitSupBot.Email.EmailSender;
+import dit.group.DitSupBot.LDAP.LDAP;
 import dit.group.DitSupBot.config.BotConfig;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,15 +19,18 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboard;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardRemove;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardButton;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import javax.mail.MessagingException;
+import javax.naming.NamingException;
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Properties;
+import java.util.regex.Pattern;
 
 @Slf4j
 @Component
@@ -35,8 +39,13 @@ public class TGBot extends TelegramLongPollingBot {
     final List<String> SupMails = new ArrayList<>();
 
 
+
+
     final BotConfig config;
     final HashMap<Long, ArrayList<String>> bazaHash = new HashMap<>();
+    private static final String PHONE_NUMBER_GARBAGE_REGEX = "[()\\s-]+";
+    private static final String PHONE_NUMBER_REGEX = "^((\\+[1-9]?[0-9])|0)?[7-9][0-9]{9}$";
+    private static final Pattern PHONE_NUMBER_PATTERN = Pattern.compile(PHONE_NUMBER_REGEX);
 
 
     public TGBot(BotConfig config) {
@@ -60,84 +69,102 @@ public class TGBot extends TelegramLongPollingBot {
         }
     }
 
-    public static boolean isValid(String email)
+    public static boolean isValidMail(String email)
     {
         return email.matches("^[\\w-\\.]+@[\\w-]+(\\.[\\w-]+)*\\.[a-z]{2,}$");
+    }
+    public static boolean isValidPhone(String number)
+    {
+        number.replaceAll("[\\D]","");
+        if(number.length()>=9 || number.length()<=11)
+        {
+            return true;
+        }
+        else {
+            return false;
+        }
+
     }
 
     @Override
     public void onUpdateReceived(Update update) {
         if(update.hasMessage() && update.getMessage().hasText()) {
-            if (isValid(update.getMessage().getText())) {
+            if (isValidMail(update.getMessage().getText())) {
                 SendMessage message = new SendMessage();
                 String Message = update.getMessage().getText();
                 long chatID = update.getMessage().getChatId();
-                InlineKeyboardMarkup markup = new InlineKeyboardMarkup();
-                List<List<InlineKeyboardButton>> rows = new ArrayList<>();
-                List<InlineKeyboardButton> row1 = new ArrayList<>();
-                List<InlineKeyboardButton> row2 = new ArrayList<>();
-                List<InlineKeyboardButton> row3 = new ArrayList<>();
-                List<InlineKeyboardButton> row4 = new ArrayList<>();
-                var ButtonCorp = new InlineKeyboardButton();
-                var ButtonOGM = new InlineKeyboardButton();
-                var Button1C = new InlineKeyboardButton();
-                var ButtonSysInt = new InlineKeyboardButton();
-                var ButtonTech = new InlineKeyboardButton();
-                var ButtonSad = new InlineKeyboardButton();
-                var ButtonPrj = new InlineKeyboardButton();
-                ButtonCorp.setText("Связь");
-                ButtonCorp.setCallbackData("CorpSvyaz");
+                if(new LDAP().MailVerify(Message)) {
+                    InlineKeyboardMarkup markup = new InlineKeyboardMarkup();
+                    List<List<InlineKeyboardButton>> rows = new ArrayList<>();
+                    List<InlineKeyboardButton> row1 = new ArrayList<>();
+                    List<InlineKeyboardButton> row2 = new ArrayList<>();
+                    List<InlineKeyboardButton> row3 = new ArrayList<>();
+                    List<InlineKeyboardButton> row4 = new ArrayList<>();
+                    var ButtonCorp = new InlineKeyboardButton();
+                    var ButtonOGM = new InlineKeyboardButton();
+                    var Button1C = new InlineKeyboardButton();
+                    var ButtonSysInt = new InlineKeyboardButton();
+                    var ButtonTech = new InlineKeyboardButton();
+                    var ButtonSad = new InlineKeyboardButton();
+                    var ButtonPrj = new InlineKeyboardButton();
+                    ButtonCorp.setText("Связь");
+                    ButtonCorp.setCallbackData("CorpSvyaz");
 
-                ButtonOGM.setText("ОГМ");
-                ButtonOGM.setCallbackData("OGM");
+                    ButtonOGM.setText("ОГМ");
+                    ButtonOGM.setCallbackData("OGM");
 
-                Button1C.setText("Системы управления");
-                Button1C.setCallbackData("1c");
+                    Button1C.setText("Системы управления");
+                    Button1C.setCallbackData("1c");
 
-                ButtonSysInt.setText("Системная интеграция");
-                ButtonSysInt.setCallbackData("OSI");
+                    ButtonSysInt.setText("Системная интеграция");
+                    ButtonSysInt.setCallbackData("OSI");
 
-                ButtonTech.setText("Техническое обеспечение");
-                ButtonTech.setCallbackData("OTO");
+                    ButtonTech.setText("Техническое обеспечение");
+                    ButtonTech.setCallbackData("OTO");
 
-                ButtonSad.setText("СЭД");
-                ButtonSad.setCallbackData("SAD");
+                    ButtonSad.setText("СЭД");
+                    ButtonSad.setCallbackData("SAD");
 
-                ButtonPrj.setText("Проекты");
-                ButtonPrj.setCallbackData("Project");
+                    ButtonPrj.setText("Проекты");
+                    ButtonPrj.setCallbackData("Project");
 
-                row1.add(ButtonCorp);
-                row1.add(ButtonOGM);
-                row2.add(Button1C);
-                row2.add(ButtonSysInt);
-                row3.add(ButtonSad);
-                row3.add(ButtonPrj);
-                row4.add(ButtonTech);
-                rows.add(row1);
-                rows.add(row2);
-                rows.add(row3);
-                rows.add(row4);
-                markup.setKeyboard(rows);
-                message.setReplyMarkup(markup);
-                message.setChatId(chatID);
-                if (bazaHash.containsKey(chatID)) {
+                    row1.add(ButtonCorp);
+                    row1.add(ButtonOGM);
+                    row2.add(Button1C);
+                    row2.add(ButtonSysInt);
+                    row3.add(ButtonSad);
+                    row3.add(ButtonPrj);
+                    row4.add(ButtonTech);
+                    rows.add(row1);
+                    rows.add(row2);
+                    rows.add(row3);
+                    rows.add(row4);
+                    markup.setKeyboard(rows);
+                    message.setReplyMarkup(markup);
                     message.setChatId(chatID);
-                    message.setText("Привет, " + bazaHash.get(chatID).get(0) + ", выберите категорию вашего обращения");
+                    if (bazaHash.containsKey(chatID)) {
+                        message.setChatId(chatID);
+                        message.setText("Привет, " + bazaHash.get(chatID).get(0) + ", выберите категорию вашего обращения");
 
-                } else {
-                    ArrayList<String> member = new ArrayList<>();
-                    member.add(Message);
-                    bazaHash.put(chatID, member);
-                    bazaHash.get(chatID).add("none");
-                    bazaHash.get(chatID).add("query");
+                    } else {
+                        ArrayList<String> member = new ArrayList<>();
+                        member.add(Message);
+                        bazaHash.put(chatID, member);
+                        bazaHash.get(chatID).add("none");
+                        bazaHash.get(chatID).add("query");
+                        bazaHash.get(chatID).add("0");
 
-                    message.setChatId(chatID);
-                    message.setText("Отлично, а теперь выберите категорию вашего обращения");
+                        message.setChatId(chatID);
+                        message.setText("Отлично, а теперь выберите категорию вашего обращения");
+                    }
+                    try {
+                        execute(message);
+                    } catch (TelegramApiException e) {
+                        log.error("Sending message error: " + e.getMessage());
+                    }
                 }
-                try {
-                    execute(message);
-                } catch (TelegramApiException e) {
-                    log.error("Sending message error: "+ e.getMessage());
+                else {
+                    SendMessage(chatID, "Почта неверна", false);
                 }
 
             } else{
@@ -154,10 +181,24 @@ public class TGBot extends TelegramLongPollingBot {
                                 SendMessage(chatID, "Чтобы отправить обращение в техподдержку ДИТ напишите свою рабочую почту, " +
                                         "Выберите категорию из списка, опишите проблему и нажмите отправить.", true);
                     log.info("Message sent to "+chatID);
-                } else if(bazaHash.containsKey(chatID) && bazaHash.get(chatID).get(2).equals("Send"))
+                }else if(bazaHash.containsKey(chatID) && bazaHash.get(chatID).get(2).equals("Phone")){
+                    if(isValidPhone(Message)){
+                        SendMessage(chatID, "Опишите проблему",false );
+                        bazaHash.get(chatID).set(2,"Send");
+                        bazaHash.get(chatID).set(3,Message);
+                    }
+                    else
+                    {
+                        SendMessage(chatID, "Неправильно введен номер, попробуйте ввести еще раз",false );
+                    }
+                }
+
+
+                else if(bazaHash.containsKey(chatID) && bazaHash.get(chatID).get(2).equals("Send"))
                 {
+
                     try {
-                        if(new EmailSender().Send(Message, bazaHash.get(chatID).get(0), bazaHash.get(chatID).get(1)))
+                        if(new EmailSender().Send(Message, bazaHash.get(chatID).get(0), bazaHash.get(chatID).get(1), bazaHash.get(chatID).get(3)))
                         {
                             SendMessage(chatID, "Отправлено! \nЕсли хотите отправить еще одно обращение, нажмите кнопку Старт снизу.", true);
                             log.info("Message sent to "+chatID);
@@ -742,32 +783,169 @@ public class TGBot extends TelegramLongPollingBot {
                     case "OtherSim":
                         bazaHash.get(chatID).set(1,"petrgfjsv@gmail.com");
                         bazaHash.get(chatID).set(2,"Send");
-                        SendMessage(chatID, "Опишите проблему",false);
+                        if(bazaHash.get(chatID).get(3).equals("0")) {
+                            KeyboardButton contact = new KeyboardButton("Поделиться номером телефона");
+                            contact.setRequestContact(true);
+                            KeyboardRow row = new KeyboardRow();
+                            row.add(contact);
+
+                            List<KeyboardRow> keyboard = new ArrayList<>();
+                            keyboard.add(row);
+
+                            ReplyKeyboardMarkup Phonemarkup = new ReplyKeyboardMarkup();
+                            Phonemarkup.setKeyboard(keyboard);
+                            Phonemarkup.setIsPersistent(true);
+                            Phonemarkup.setResizeKeyboard(true);
+
+                            SendMessage sendMessage = new SendMessage();
+                            sendMessage.setText("Для более оперативного решения вашей проблемы мы запрашиваем доступ к вашему номеру телефона. \nЕсли вы не хотите делиться своим контактом, то просто опишите свою проблему.");
+                            sendMessage.setChatId(chatID);
+                            sendMessage.setReplyMarkup(Phonemarkup);
+
+                            try {
+                                execute(sendMessage);
+                            } catch (TelegramApiException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        else {
+                            SendMessage(chatID, "Опишите проблему",false);
+                        }
+
                         break;
                     case "1CBasePerm":
                     case "1CChngPerm":
                     case "Other1C":
                         bazaHash.get(chatID).set(1,"petrgfjsv@gmail.com");
                         bazaHash.get(chatID).set(2,"Send");
-                        SendMessage(chatID, "Опишите проблему",false);
+                        if(bazaHash.get(chatID).get(3).equals("0")) {
+                            KeyboardButton contact = new KeyboardButton("Поделиться номером телефона");
+                            contact.setRequestContact(true);
+                            KeyboardRow row = new KeyboardRow();
+                            row.add(contact);
+
+                            List<KeyboardRow> keyboard = new ArrayList<>();
+                            keyboard.add(row);
+
+                            ReplyKeyboardMarkup Phonemarkup = new ReplyKeyboardMarkup();
+                            Phonemarkup.setKeyboard(keyboard);
+                            Phonemarkup.setIsPersistent(true);
+                            Phonemarkup.setResizeKeyboard(true);
+
+                            SendMessage sendMessage = new SendMessage();
+                            sendMessage.setChatId(chatID);
+                            sendMessage.setText("Для более оперативного решения вашей проблемы мы запрашиваем доступ к вашему номеру телефона. \nЕсли вы не хотите делиться своим контактом, то просто опишите свою проблему.");
+                            sendMessage.setReplyMarkup(Phonemarkup);
+
+                            try {
+                                execute(sendMessage);
+                            } catch (TelegramApiException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        else {
+                            SendMessage(chatID, "Опишите проблему",false);
+                        }
+
                         break;
                     case "DataSync":
                     case "ZUP":
                     case "PeriodClose":
                         bazaHash.get(chatID).set(1,"petrgfjsv@gmail.com");
                         bazaHash.get(chatID).set(2,"Send");
-                        SendMessage(chatID, "Опишите проблему",false);
+                        if(bazaHash.get(chatID).get(3).equals("0")) {
+                            KeyboardButton contact = new KeyboardButton("Поделиться номером телефона");
+                            contact.setRequestContact(true);
+                            KeyboardRow row = new KeyboardRow();
+                            row.add(contact);
+
+                            List<KeyboardRow> keyboard = new ArrayList<>();
+                            keyboard.add(row);
+
+                            ReplyKeyboardMarkup Phonemarkup = new ReplyKeyboardMarkup();
+                            Phonemarkup.setKeyboard(keyboard);
+                            Phonemarkup.setResizeKeyboard(true);
+
+                            SendMessage sendMessage = new SendMessage();
+                            sendMessage.setChatId(chatID);
+                            sendMessage.setText("Для более оперативного решения вашей проблемы мы запрашиваем доступ к вашему номеру телефона. \nЕсли вы не хотите делиться своим контактом, то просто опишите свою проблему.");
+                            sendMessage.setReplyMarkup(Phonemarkup);
+
+                            try {
+                                execute(sendMessage);
+                            } catch (TelegramApiException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        else {
+                            SendMessage(chatID, "Опишите проблему",false);
+                        }
+
                         break;
                     case "UPP":
                         bazaHash.get(chatID).set(1,"petrgfjsv@gmail.com");
                         bazaHash.get(chatID).set(2,"Send");
-                        SendMessage(chatID, "Опишите проблему",false);
+                        if(bazaHash.get(chatID).get(3).equals("0")) {
+                            KeyboardButton contact = new KeyboardButton("Поделиться номером телефона");
+                            contact.setRequestContact(true);
+                            KeyboardRow row = new KeyboardRow();
+                            row.add(contact);
+
+                            List<KeyboardRow> keyboard = new ArrayList<>();
+                            keyboard.add(row);
+
+                            ReplyKeyboardMarkup Phonemarkup = new ReplyKeyboardMarkup();
+                            Phonemarkup.setKeyboard(keyboard);
+                            Phonemarkup.setResizeKeyboard(true);
+
+                            SendMessage sendMessage = new SendMessage();
+                            sendMessage.setChatId(chatID);
+                            sendMessage.setText("Для более оперативного решения вашей проблемы мы запрашиваем доступ к вашему номеру телефона. \nЕсли вы не хотите делиться своим контактом, то просто опишите свою проблему.");
+                            sendMessage.setReplyMarkup(Phonemarkup);
+
+                            try {
+                                execute(sendMessage);
+                            } catch (TelegramApiException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        else {
+                            SendMessage(chatID, "Опишите проблему",false);
+                        }
+
                         break;
                     case "MailInstall":
                     case "BankInstall":
                         bazaHash.get(chatID).set(1,"petrgfjsv@gmail.com");
                         bazaHash.get(chatID).set(2,"Send");
-                        SendMessage(chatID, "Опишите проблему",false);
+                        if(bazaHash.get(chatID).get(3).equals("0")) {
+                            KeyboardButton contact = new KeyboardButton("Поделиться номером телефона");
+                            contact.setRequestContact(true);
+                            KeyboardRow row = new KeyboardRow();
+                            row.add(contact);
+
+                            List<KeyboardRow> keyboard = new ArrayList<>();
+                            keyboard.add(row);
+
+                            ReplyKeyboardMarkup Phonemarkup = new ReplyKeyboardMarkup();
+                            Phonemarkup.setKeyboard(keyboard);
+                            Phonemarkup.setResizeKeyboard(true);
+
+                            SendMessage sendMessage = new SendMessage();
+                            sendMessage.setChatId(chatID);
+                            sendMessage.setText("Для более оперативного решения вашей проблемы мы запрашиваем доступ к вашему номеру телефона. \nЕсли вы не хотите делиться своим контактом, то просто опишите свою проблему.");
+                            sendMessage.setReplyMarkup(Phonemarkup);
+
+                            try {
+                                execute(sendMessage);
+                            } catch (TelegramApiException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        else {
+                            SendMessage(chatID, "Опишите проблему",false);
+                        }
+
                         break;
                     case "ResDostup":
                     case "AnotherAdress":
@@ -775,7 +953,34 @@ public class TGBot extends TelegramLongPollingBot {
                     case "OtherInt":
                         bazaHash.get(chatID).set(1,"petrgfjsv@gmail.com");
                         bazaHash.get(chatID).set(2,"Send");
-                        SendMessage(chatID, "Опишите проблему",false);
+                        if(bazaHash.get(chatID).get(3).equals("0")) {
+                            KeyboardButton contact = new KeyboardButton("Поделиться номером телефона");
+                            contact.setRequestContact(true);
+                            KeyboardRow row = new KeyboardRow();
+                            row.add(contact);
+
+                            List<KeyboardRow> keyboard = new ArrayList<>();
+                            keyboard.add(row);
+
+                            ReplyKeyboardMarkup Phonemarkup = new ReplyKeyboardMarkup();
+                            Phonemarkup.setKeyboard(keyboard);
+                            Phonemarkup.setResizeKeyboard(true);
+
+                            SendMessage sendMessage = new SendMessage();
+                            sendMessage.setChatId(chatID);
+                            sendMessage.setText("Для более оперативного решения вашей проблемы мы запрашиваем доступ к вашему номеру телефона. \nЕсли вы не хотите делиться своим контактом, то просто опишите свою проблему.");
+                            sendMessage.setReplyMarkup(Phonemarkup);
+
+                            try {
+                                execute(sendMessage);
+                            } catch (TelegramApiException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        else {
+                            SendMessage(chatID, "Опишите проблему",false);
+                        }
+
                         break;
                     case "CartChange":
                     case "IDBlock":
@@ -786,7 +991,34 @@ public class TGBot extends TelegramLongPollingBot {
                     case "OtherTech":
                         bazaHash.get(chatID).set(1,"petrgfjsv@gmail.com");
                         bazaHash.get(chatID).set(2,"Send");
-                        SendMessage(chatID, "Опишите проблему",false);
+                        if(bazaHash.get(chatID).get(3).equals("0")) {
+                            KeyboardButton contact = new KeyboardButton("Поделиться номером телефона");
+                            contact.setRequestContact(true);
+                            KeyboardRow row = new KeyboardRow();
+                            row.add(contact);
+
+                            List<KeyboardRow> keyboard = new ArrayList<>();
+                            keyboard.add(row);
+
+                            ReplyKeyboardMarkup Phonemarkup = new ReplyKeyboardMarkup();
+                            Phonemarkup.setKeyboard(keyboard);
+                            Phonemarkup.setResizeKeyboard(true);
+
+                            SendMessage sendMessage = new SendMessage();
+                            sendMessage.setChatId(chatID);
+                            sendMessage.setText("Для более оперативного решения вашей проблемы мы запрашиваем доступ к вашему номеру телефона. \nЕсли вы не хотите делиться своим контактом, то просто опишите свою проблему.");
+                            sendMessage.setReplyMarkup(Phonemarkup);
+
+                            try {
+                                execute(sendMessage);
+                            } catch (TelegramApiException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        else {
+                            SendMessage(chatID, "Опишите проблему",false);
+                        }
+
                         break;
                     case "SoglDoc":
                     case "Corresp1C":
@@ -795,7 +1027,34 @@ public class TGBot extends TelegramLongPollingBot {
                     case "Instruction":
                         bazaHash.get(chatID).set(1,"petrgfjsv@gmail.com");
                         bazaHash.get(chatID).set(2,"Send");
-                        SendMessage(chatID, "Опишите проблему",false);
+                        if(bazaHash.get(chatID).get(3).equals("0")) {
+                            KeyboardButton contact = new KeyboardButton("Поделиться номером телефона");
+                            contact.setRequestContact(true);
+                            KeyboardRow row = new KeyboardRow();
+                            row.add(contact);
+
+                            List<KeyboardRow> keyboard = new ArrayList<>();
+                            keyboard.add(row);
+
+                            ReplyKeyboardMarkup Phonemarkup = new ReplyKeyboardMarkup();
+                            Phonemarkup.setKeyboard(keyboard);
+                            Phonemarkup.setResizeKeyboard(true);
+
+                            SendMessage sendMessage = new SendMessage();
+                            sendMessage.setChatId(chatID);
+                            sendMessage.setText("Для более оперативного решения вашей проблемы мы запрашиваем доступ к вашему номеру телефона. \nЕсли вы не хотите делиться своим контактом, то просто опишите свою проблему.");
+                            sendMessage.setReplyMarkup(Phonemarkup);
+
+                            try {
+                                execute(sendMessage);
+                            } catch (TelegramApiException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        else {
+                            SendMessage(chatID, "Опишите проблему",false);
+                        }
+
                         break;
                     case "ZSMKUPNEIS":
                     case "ZSMKUPTECH":
@@ -807,7 +1066,34 @@ public class TGBot extends TelegramLongPollingBot {
                     case "ZSMKNIZTECH":
                         bazaHash.get(chatID).set(1,"petrgfjsv@gmail.com");
                         bazaHash.get(chatID).set(2,"Send");
-                        SendMessage(chatID, "Опишите проблему",false);
+                        if(bazaHash.get(chatID).get(3).equals("0")) {
+                            KeyboardButton contact = new KeyboardButton("Поделиться номером телефона");
+                            contact.setRequestContact(true);
+                            KeyboardRow row = new KeyboardRow();
+                            row.add(contact);
+
+                            List<KeyboardRow> keyboard = new ArrayList<>();
+                            keyboard.add(row);
+
+                            ReplyKeyboardMarkup Phonemarkup = new ReplyKeyboardMarkup();
+                            Phonemarkup.setKeyboard(keyboard);
+                            Phonemarkup.setResizeKeyboard(true);
+
+                            SendMessage sendMessage = new SendMessage();
+                            sendMessage.setChatId(chatID);
+                            sendMessage.setText("Для более оперативного решения вашей проблемы мы запрашиваем доступ к вашему номеру телефона. \nЕсли вы не хотите делиться своим контактом, то просто опишите свою проблему.");
+                            sendMessage.setReplyMarkup(Phonemarkup);
+
+                            try {
+                                execute(sendMessage);
+                            } catch (TelegramApiException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        else {
+                            SendMessage(chatID, "Опишите проблему",false);
+                        }
+
                         break;
                     case "1CInstallSZMKProj":
                     case "CreateUser1CSZMKProj":
@@ -817,7 +1103,34 @@ public class TGBot extends TelegramLongPollingBot {
                     case "AnotherSZMKProj":
                         bazaHash.get(chatID).set(1,"petrgfjsv@gmail.com");
                         bazaHash.get(chatID).set(2,"Send");
-                        SendMessage(chatID, "Опишите проблему",false);
+                        if(bazaHash.get(chatID).get(3).equals("0")) {
+                            KeyboardButton contact = new KeyboardButton("Поделиться номером телефона");
+                            contact.setRequestContact(true);
+                            KeyboardRow row = new KeyboardRow();
+                            row.add(contact);
+
+                            List<KeyboardRow> keyboard = new ArrayList<>();
+                            keyboard.add(row);
+
+                            ReplyKeyboardMarkup Phonemarkup = new ReplyKeyboardMarkup();
+                            Phonemarkup.setKeyboard(keyboard);
+                            Phonemarkup.setResizeKeyboard(true);
+
+                            SendMessage sendMessage = new SendMessage();
+                            sendMessage.setChatId(chatID);
+                            sendMessage.setText("Для более оперативного решения вашей проблемы мы запрашиваем доступ к вашему номеру телефона. \nЕсли вы не хотите делиться своим контактом, то просто опишите свою проблему.");
+                            sendMessage.setReplyMarkup(Phonemarkup);
+
+                            try {
+                                execute(sendMessage);
+                            } catch (TelegramApiException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        else {
+                            SendMessage(chatID, "Опишите проблему",false);
+                        }
+
                         break;
                     case "1CInstallSHSProj":
                     case "CreateUser1CSHSProj":
@@ -827,7 +1140,34 @@ public class TGBot extends TelegramLongPollingBot {
                     case "AnotherSHSProj":
                         bazaHash.get(chatID).set(1,"petrgfjsv@gmail.com");
                         bazaHash.get(chatID).set(2,"Send");
-                        SendMessage(chatID, "Опишите проблему",false);
+                        if(bazaHash.get(chatID).get(3).equals("0")) {
+                            KeyboardButton contact = new KeyboardButton("Поделиться номером телефона");
+                            contact.setRequestContact(true);
+                            KeyboardRow row = new KeyboardRow();
+                            row.add(contact);
+
+                            List<KeyboardRow> keyboard = new ArrayList<>();
+                            keyboard.add(row);
+
+                            ReplyKeyboardMarkup Phonemarkup = new ReplyKeyboardMarkup();
+                            Phonemarkup.setKeyboard(keyboard);
+                            Phonemarkup.setResizeKeyboard(true);
+
+                            SendMessage sendMessage = new SendMessage();
+                            sendMessage.setChatId(chatID);
+                            sendMessage.setText("Для более оперативного решения вашей проблемы мы запрашиваем доступ к вашему номеру телефона. \nЕсли вы не хотите делиться своим контактом, то просто опишите свою проблему.");
+                            sendMessage.setReplyMarkup(Phonemarkup);
+
+                            try {
+                                execute(sendMessage);
+                            } catch (TelegramApiException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        else {
+                            SendMessage(chatID, "Опишите проблему",false);
+                        }
+
                         break;
                     case "1CInstallUHProj":
                     case "CreateUser1CUHProj":
@@ -837,7 +1177,34 @@ public class TGBot extends TelegramLongPollingBot {
                     case "AnotherUHProj":
                         bazaHash.get(chatID).set(1,"petrgfjsv@gmail.com");
                         bazaHash.get(chatID).set(2,"Send");
-                        SendMessage(chatID, "Опишите проблему",false);
+                        if(bazaHash.get(chatID).get(3).equals("0")) {
+                            KeyboardButton contact = new KeyboardButton("Поделиться номером телефона");
+                            contact.setRequestContact(true);
+                            KeyboardRow row = new KeyboardRow();
+                            row.add(contact);
+
+                            List<KeyboardRow> keyboard = new ArrayList<>();
+                            keyboard.add(row);
+
+                            ReplyKeyboardMarkup Phonemarkup = new ReplyKeyboardMarkup();
+                            Phonemarkup.setKeyboard(keyboard);
+                            Phonemarkup.setResizeKeyboard(true);
+
+                            SendMessage sendMessage = new SendMessage();
+                            sendMessage.setChatId(chatID);
+                            sendMessage.setText("Для более оперативного решения вашей проблемы мы запрашиваем доступ к вашему номеру телефона. \nЕсли вы не хотите делиться своим контактом, то просто опишите свою проблему.");
+                            sendMessage.setReplyMarkup(Phonemarkup);
+
+                            try {
+                                execute(sendMessage);
+                            } catch (TelegramApiException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        else {
+                            SendMessage(chatID, "Опишите проблему",false);
+                        }
+
                         break;
 
                 }
@@ -846,6 +1213,18 @@ public class TGBot extends TelegramLongPollingBot {
                 StartRecieved(chatID,"name");
             }
         }
+        else if(update.getMessage().hasContact()&&bazaHash.containsKey(update.getMessage().getChatId()))
+        {
+            long chatID = update.getMessage().getChatId();
+            if(bazaHash.get(chatID).get(2).equals("Send")) {
+                bazaHash.get(chatID).set(3, update.getMessage().getContact().getPhoneNumber());
+                SendMessage(chatID,"Опишите проблему",false);
+            }
+            else {
+                StartRecieved(chatID,bazaHash.get(chatID).get(0));
+            }
+        }
+
     }
     @Override
     public String getBotToken(){

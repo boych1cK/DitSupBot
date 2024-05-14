@@ -22,7 +22,7 @@ import java.util.Properties;
 public class EmailSender {
     private static Session session;
 
-    public boolean Send(String Text, String Objective, String To) throws MessagingException{
+    public boolean Send(String Text, String Objective, String To, String phone) throws MessagingException{
         Properties properties = new Properties();
         properties.put("mail.host", "smtp.yandex.ru");
         properties.put("mail.smtp.ssl.enable", "true");
@@ -49,7 +49,13 @@ public class EmailSender {
             message.setRecipients(
                     Message.RecipientType.TO, InternetAddress.parse(To));
             message.setSubject(Objective);
-            String msg = Text;
+            String msg;
+            if(phone.equals("0"))
+            {
+                msg = Text;
+            }else {
+                msg = Text + "\n" + phone;
+            }
 
             MimeBodyPart mimeBodyPart = new MimeBodyPart();
             mimeBodyPart.setContent(msg, "text/html; charset=utf-8");
