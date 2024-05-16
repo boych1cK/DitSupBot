@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>dit.group</groupId>
 	<artifactId>DitSupBot</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.1.0</version>
 	<name>DitSupBot</name>
 	<description>Bot for DIT support</description>
 	<properties>

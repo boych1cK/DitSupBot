@@ -1,4 +1,7 @@
-G:\DITBot\DitSupBot_\DitSupBot\src\main\java\dit\group\DitSupBot\config\Initializer.java
-G:\DITBot\DitSupBot_\DitSupBot\src\main\java\dit\group\DitSupBot\config\BotConfig.java
-G:\DITBot\DitSupBot_\DitSupBot\src\main\java\dit\group\DitSupBot\DitSupBotApplication.java
-G:\DITBot\DitSupBot_\DitSupBot\src\main\java\dit\group\DitSupBot\Service\TGBot.java
+D:\DITBot\DitSupportBot-main\DitSupportBot-main\DitSupBot\src\main\java\dit\group\DitSupBot\Email\EmailSender.java
+D:\DITBot\DitSupportBot-main\DitSupportBot-main\DitSupBot\src\main\java\dit\group\DitSupBot\LDAP\LDAP.java
+D:\DITBot\DitSupportBot-main\DitSupportBot-main\DitSupBot\src\main\java\dit\group\DitSupBot\DitSupBotApplication.java
+D:\DITBot\DitSupportBot-main\DitSupportBot-main\DitSupBot\src\main\java\dit\group\DitSupBot\config\Categories.java
+D:\DITBot\DitSupportBot-main\DitSupportBot-main\DitSupBot\src\main\java\dit\group\DitSupBot\config\BotConfig.java
+D:\DITBot\DitSupportBot-main\DitSupportBot-main\DitSupBot\src\main\java\dit\group\DitSupBot\Service\TGBot.java
+D:\DITBot\DitSupportBot-main\DitSupportBot-main\DitSupBot\src\main\java\dit\group\DitSupBot\config\Initializer.java

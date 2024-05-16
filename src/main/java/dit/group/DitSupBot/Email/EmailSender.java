@@ -22,18 +22,18 @@ import java.util.Properties;
 public class EmailSender {
     private static Session session;
 
-    public boolean Send(String Text, String Objective, String To, String phone) throws MessagingException{
+    public boolean Send(String Text, String Objective, String To, String phone, String from) throws MessagingException{
         Properties properties = new Properties();
-        properties.put("mail.host", "smtp.yandex.ru");
-        properties.put("mail.smtp.ssl.enable", "true");
-        properties.put("mail.smtp.port", "465");
+        properties.put("mail.host", "mail.oksshs.ru");
+        //properties.put("mail.smtp.ssl.enable", "true");
+        properties.put("mail.smtp.port", "25");
         properties.put("mail.smtp.auth", "true");
 
-        properties.put("mail.debug", "true");
+        //properties.put("mail.debug", "true");
 
 
-        String Account = "noreply@adm-nk.ru";
-        String Pass = "ndqpjmyilpgsyybw";
+        String Account = "notification@oksshs.local";
+        String Pass = "";
 
         Authenticator auth = new Authenticator() {
             @Override
@@ -45,12 +45,12 @@ public class EmailSender {
         session = Session.getDefaultInstance(properties, auth);
         try{
             Message message = new MimeMessage(session);
-            message.setFrom(new InternetAddress("noreply@adm-nk.ru"));
+            message.setFrom(new InternetAddress(from));
             message.setRecipients(
                     Message.RecipientType.TO, InternetAddress.parse(To));
             message.setSubject(Objective);
             String msg;
-            if(phone.equals("0"))
+            if(phone.equals("noPhone"))
             {
                 msg = Text;
             }else {

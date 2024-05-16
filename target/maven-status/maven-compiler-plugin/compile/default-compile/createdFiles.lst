@@ -1,4 +1,8 @@
+dit\group\DitSupBot\Email\EmailSender.class
+dit\group\DitSupBot\config\Categories.class
+dit\group\DitSupBot\LDAP\LDAP.class
 dit\group\DitSupBot\config\Initializer.class
 dit\group\DitSupBot\DitSupBotApplication.class
 dit\group\DitSupBot\config\BotConfig.class
 dit\group\DitSupBot\Service\TGBot.class
+dit\group\DitSupBot\Email\EmailSender$1.class
